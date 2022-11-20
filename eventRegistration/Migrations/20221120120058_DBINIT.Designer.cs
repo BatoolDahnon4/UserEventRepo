@@ -11,7 +11,7 @@ using eventRegistration;
 namespace eventRegistration.Migrations
 {
     [DbContext(typeof(GContext))]
-    [Migration("20221117135242_DBINIT")]
+    [Migration("20221120120058_DBINIT")]
     partial class DBINIT
     {
         /// <inheritdoc />

@@ -1,5 +1,6 @@
 ﻿using MedcorSL.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace eventRegistration.Controllers
@@ -11,6 +12,8 @@ namespace eventRegistration.Controllers
         private IGuest _IGuest;
         private readonly GContext _context;
         private readonly IEmailService emailService;
+
+        public string lblCount;
 
         public GuestController(GContext dbContext, IEmailService emailService)
         {
@@ -48,19 +51,29 @@ namespace eventRegistration.Controllers
         [Route("addGuest")]
         public async Task<ActionResult<Guest>> AddGuest(Guest guest)
         {
-            var oldEmail= await _context.Guest.AnyAsync(c => c.Email == guest.Email);
+            var oldEmail = await _context.Guest.AnyAsync(c => c.Email == guest.Email);
             if (oldEmail)
             {
                 return BadRequest("Use another email please!");
             }
 
+            var count = await _context.Guest.CountAsync();
+
+            if (count >= 400)
+            {
+                return BadRequest("Full");
+            }
 
             await _context.Guest.AddAsync(guest);
-             _context.SaveChanges();
+            _context.SaveChanges();
 
-            await emailService.SendRegistrationEmailAsync(guest);
+            await emailService.SendRegistrationEmailAsync(guest, count + 1);
+
+            System.Console.WriteLine(lblCount);
             return Ok("");
+
         }
+
 
     }
 }
