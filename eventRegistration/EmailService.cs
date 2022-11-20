@@ -1,6 +1,7 @@
 ﻿using eventRegistration;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Data.SqlClient;
 using MimeKit;
 using System.Net;
 
@@ -9,8 +10,8 @@ namespace MedcorSL.Services
     public interface IEmailService
     {
         Task SendEmailAsync(EmailViewModel emailViewModel);
-        Task SendRegistrationEmailAsync(Guest address);
-
+       
+        Task SendRegistrationEmailAsync(Guest guest, int count);
     }
 
     public class EmailService : IEmailService
@@ -60,11 +61,11 @@ namespace MedcorSL.Services
 
         }
 
-        public Task SendRegistrationEmailAsync(Guest guest)
+        public Task SendRegistrationEmailAsync(Guest guest, int count)
         {
-            var body = "<html><body><p>Hi" + " " + guest.Name
-                + "</p><pTHANK YOU FOR REGISTRATION</p></body></html>";
-            /*" THANK YOU FOR REGISTRATION ";*/
+          
+            var body = "<html><body><p> Gala Dinner QR"
+                + "</p><p>هذه دعوة خاصة وشخصية لحضور عشاء التشبيك وبناء العلاقات الذي سيعقد في الثاني عشر من ديسمبر في فندق الميلينيوم الساعة 6 مساءً ويجب إبرازها وقت الحضور</p>"+"<p>رقم الدعوة"+": "+count+"</p></body></html>";
             return SendEmailAsync(new EmailViewModel
             { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = body });
         }
