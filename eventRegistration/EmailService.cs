@@ -12,6 +12,7 @@ namespace MedcorSL.Services
         Task SendEmailAsync(EmailViewModel emailViewModel);
        
         Task SendRegistrationEmailAsync(Guest guest, int count);
+        Task SendRegistrationEmailAsync(Guest guest);
     }
 
     public class EmailService : IEmailService
@@ -70,8 +71,13 @@ namespace MedcorSL.Services
             { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = body });
         }
 
-
-
+        public Task SendRegistrationEmailAsync(Guest guest)
+        {
+            var body = "<html><body><p> "
+                  + "</p><p> welcome </p>" + "</p></body></html>";
+            return SendEmailAsync(new EmailViewModel
+            { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = body });
+        }
     }
 
 
