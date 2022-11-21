@@ -32,7 +32,8 @@ namespace eventRegistration.Controllers
                 Position = v.Position,
                 Email = v.Email,
                 CompanyName = v.CompanyName,
-                PhoneNumber = v.PhoneNumber
+                PhoneNumber = v.PhoneNumber,
+                Source= v.Source,
             }).ToListAsync();
             return Ok(guest);
         }
@@ -66,10 +67,14 @@ namespace eventRegistration.Controllers
 
             await _context.Guest.AddAsync(guest);
             _context.SaveChanges();
-
-            await emailService.SendRegistrationEmailAsync(guest, count + 1);
-
-            System.Console.WriteLine(lblCount);
+            if (guest.Source == "westBank")
+            {
+                await emailService.SendRegistrationEmailAsync(guest, count + 1);
+            }
+            else if (guest.Source == "Gaza")
+            {
+                await emailService.SendRegistrationEmailAsync(guest);
+            }
             return Ok("");
 
         }

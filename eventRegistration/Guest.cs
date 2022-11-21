@@ -17,5 +17,6 @@ namespace eventRegistration
         public string Email { get; set; }
         public string CompanyName { get; set; } = String.Empty;
         public string PhoneNumber { get; set; } = String.Empty;
+        public string Source { get; set;} = string.Empty;
     }
 }

@@ -11,7 +11,7 @@ using eventRegistration;
 namespace eventRegistration.Migrations
 {
     [DbContext(typeof(GContext))]
-    [Migration("20221120120058_DBINIT")]
+    [Migration("20221121113731_DBINIT")]
     partial class DBINIT
     {
         /// <inheritdoc />
@@ -49,6 +49,10 @@ namespace eventRegistration.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Source")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
