@@ -74,7 +74,7 @@ namespace MedcorSL.Services
         public Task SendRegistrationEmailAsync(Guest guest)
         {
             var body = "<html><body><p> "
-                  + "</p><p> welcome </p>" + "</p></body></html>";
+                  + "</p><p>Registration done successfully </p>" + "</p></body></html>";
             return SendEmailAsync(new EmailViewModel
             { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = body });
         }
