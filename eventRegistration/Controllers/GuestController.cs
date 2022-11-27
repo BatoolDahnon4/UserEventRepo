@@ -33,7 +33,7 @@ namespace eventRegistration.Controllers
                 Email = v.Email,
                 CompanyName = v.CompanyName,
                 PhoneNumber = v.PhoneNumber,
-                Source= v.Source,
+                Source = v.Source,
             }).ToListAsync();
             return Ok(guest);
         }
@@ -67,11 +67,11 @@ namespace eventRegistration.Controllers
 
             await _context.Guest.AddAsync(guest);
             _context.SaveChanges();
-            if (guest.Source == "westBank")
+            if (guest.Source == "gaza" || guest.Source == "westbanke")
             {
                 await emailService.SendRegistrationEmailAsync(guest, count + 1);
             }
-            else if (guest.Source == "Gaza")
+            else if (guest.Source == "conferencegaza" || guest.Source == "conferencewestbank")
             {
                 await emailService.SendRegistrationEmailAsync(guest);
             }
