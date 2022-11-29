@@ -1,9 +1,19 @@
-﻿using eventRegistration;
+﻿using Azure;
+using eventRegistration;
+using eventRegistration.Controllers;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Data.SqlClient;
 using MimeKit;
+using MimeKit.Utils;
+using Newtonsoft.Json;
+using QRCoder;
+using System.Data;
+using System.Drawing;
 using System.Net;
+using System.Xml.Linq;
 
 namespace MedcorSL.Services
 {
@@ -36,10 +46,25 @@ namespace MedcorSL.Services
                 emailViewModel.ToAddress
             ));
             mimeMessage.Subject = (string)emailViewModel.Subject;
-            mimeMessage.Body = new TextPart("html")
-            {
-                Text = (string)emailViewModel.Body
-            };
+
+
+            var builder = new BodyBuilder();
+            
+            var image = builder.LinkedResources.Add("qr.png", emailViewModel.Image);
+
+            image.ContentId = MimeUtils.GenerateMessageId();
+
+            builder.HtmlBody = string.Format(emailViewModel.Body, image.ContentId);
+
+            mimeMessage.Body = builder.ToMessageBody();
+
+
+            //mimeMessage.Body = new TextPart("html")
+            //{
+            //    Text = (string)emailViewModel.Body
+            //};
+
+            
             using (var emailClient = new SmtpClient())
             {
                 try
@@ -64,19 +89,44 @@ namespace MedcorSL.Services
 
         public Task SendRegistrationEmailAsync(Guest guest, int count)
         {
-          
-            var body = "<html><body><p> Gala Dinner QR"
-                + "</p><p>هذه دعوة خاصة وشخصية لحضور عشاء التشبيك وبناء العلاقات الذي سيعقد في الثاني عشر من ديسمبر في فندق الميلينيوم الساعة 6 مساءً ويجب إبرازها وقت الحضور</p>"+"<p>رقم الدعوة"+": "+count+"</p></body></html>";
+            var qrData = CreateQRCode(guest);
+
+
             return SendEmailAsync(new EmailViewModel
-            { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = body });
+            { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = @"<p>Hey!</p><img src=""Image.png"">", Image = qrData });
+            //var qrData = CreateQRCode(guest);
+            ////var body = @$"<html><body><p>هذه دعوة خاصة وشخصية لحضور عشاء التشبيك وبناء العلاقات الذي سيعقد في الثاني عشر من ديسمبر في فندق الميلينيوم الساعة 6 مساءً ويجب إبرازها وقت الحضور</p>"+"<p>رقم الدعوة"+":"+count+
+            ////   "</p><br><img style='width:500px;' src='{qrData}'></body></html>";
+            ////var body = "<html><body><p> Gala Dinner QR"+"</p>" +
+            ////    "<p>هذه دعوة خاصة وشخصية لحضور عشاء التشبيك وبناء العلاقات الذي سيعقد في الثاني عشر من ديسمبر في فندق الميلينيوم الساعة 6 مساءً ويجب إبرازها وقت الحضور</p>"+"<p>رقم الدعوة"+": "+count+
+            ////    "</p> <br><img style='width:500px; src='{qrData}'></body></html>";
+            //return SendEmailAsync(new EmailViewModel
+            //{ ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = body });
         }
 
         public Task SendRegistrationEmailAsync(Guest guest)
         {
-            var body = "<html><body><p> "
-                  + "</p><p>Registration done successfully </p>" + "</p></body></html>";
+
+            var qrData = CreateQRCode(guest);
+            
+           
             return SendEmailAsync(new EmailViewModel
-            { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = body });
+            { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body=@"<p>Hey!</p><img src=""Image.png"">", Image = qrData });
+        }
+
+
+        private byte[] CreateQRCode(Guest guest)
+        {
+            QRCodeGenerator QrGenerator = new QRCodeGenerator();
+
+            var data = JsonConvert.SerializeObject(guest);
+            QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(data, QRCodeGenerator.ECCLevel.M);
+            QRCode QrCode = new QRCode(QrCodeInfo);
+            Bitmap QrBitmap = QrCode.GetGraphic(10);
+            byte[] BitmapArray = QrBitmap.BitmapToByteArray();
+            string QrUri = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(BitmapArray));
+           
+            return BitmapArray;
         }
     }
 
