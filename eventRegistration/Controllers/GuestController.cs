@@ -57,13 +57,13 @@ namespace eventRegistration.Controllers
             {
                 return BadRequest("Use another email please!");
             }
+            Random generator = new Random();
+            var count = generator.Next(100000, 1000000);
+          
 
-            var count = await _context.Guest.CountAsync();
+            //var count = await _context.Guest.CountAsync();
 
-            if (count >= 400)
-            {
-                return BadRequest("Full");
-            }
+        
 
             await _context.Guest.AddAsync(guest);
             _context.SaveChanges();
