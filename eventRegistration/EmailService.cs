@@ -94,7 +94,7 @@ namespace MedcorSL.Services
 
             return SendEmailAsync(new EmailViewModel
             { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = @"<p>هذه دعوة خاصة وشخصية لحضور عشاء التشبيك وبناء العلاقات الذي سيعقد في الثاني عشر من ديسمبر في فندق الميلينيوم الساعة 6 مساءً ويجب إبرازها وقت الحضور</p>
-             <img src=""Image.png""> <br> ID Number:" +count, Image = qrData });
+              <br> ID Number:" +count, Image = qrData });
             //var qrData = CreateQRCode(guest);
             ////var body = @$"<html><body><p>هذه دعوة خاصة وشخصية لحضور عشاء التشبيك وبناء العلاقات الذي سيعقد في الثاني عشر من ديسمبر في فندق الميلينيوم الساعة 6 مساءً ويجب إبرازها وقت الحضور</p>"+"<p>رقم الدعوة"+":"+count+
             ////   "</p><br><img style='width:500px;' src='{qrData}'></body></html>";
@@ -112,7 +112,7 @@ namespace MedcorSL.Services
             
            
             return SendEmailAsync(new EmailViewModel
-            { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body=@"<img src=""Image.png"">", Image = qrData });
+            { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body= @"Successfully registered ", Image = qrData });
         }
 
 
