@@ -7,8 +7,9 @@ namespace eventRegistration
 {
     public class Guest
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; } = String.Empty;
         public string Position { get; set; } = String.Empty;
         [Required]
@@ -18,5 +19,10 @@ namespace eventRegistration
         public string CompanyName { get; set; } = String.Empty;
         public int PhoneNumber { get; set; }
         public string Source { get; set;} = string.Empty;
+        public Boolean IsAttended { get; set; }
+        public string haveMind { get; set; } = string.Empty;
+        public string Table { get; set; }=string.Empty;
+
+       
     }
 }

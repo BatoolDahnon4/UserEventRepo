@@ -12,6 +12,7 @@ namespace eventRegistration
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Guest>().HasIndex(c => c.Email).IsUnique(true);
+            modelBuilder.Entity<Guest>().Property(c => c.Id).HasDefaultValueSql("newid()");
 
             base.OnModelCreating(modelBuilder);
 
