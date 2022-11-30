@@ -3,7 +3,7 @@
     public interface IGuest
     {
         List<Guest> Get();
-        Guest GetId(int id);
+        //Guest GetId(int id);
         Guest AddEmployee(Guest guest);
 
     }
@@ -19,10 +19,10 @@
         {
             return guestes;
         }
-        public Guest GetId(int Id)
-        {
-            return guestes.FirstOrDefault(f => f.Id == Id);
-        }
+        //public Guest GetId(int Id)
+        //{
+        //    return guestes.FirstOrDefault(f => f.Id == Id);
+        //}
 
         public Guest AddEmployee(Guest guest)
         {

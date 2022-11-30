@@ -34,19 +34,20 @@ namespace eventRegistration.Controllers
                 CompanyName = v.CompanyName,
                 PhoneNumber = v.PhoneNumber,
                 Source = v.Source,
-            }).ToListAsync();
+                haveMind = v.haveMind,
+        }).ToListAsync();
             return Ok(guest);
         }
 
-        [HttpGet]
-        [Route("getGuestById")]
-        public async Task<ActionResult<Guest>> GetGuest(int Id)
-        {
-            var guest = await _context.Guest.Where(e => e.Id == Id).FirstOrDefaultAsync();
-            if (guest == null)
-                return BadRequest("not found");
-            return Ok(guest);
-        }
+        //[HttpGet]
+        //[Route("getGuestById")]
+        //public async Task<ActionResult<Guest>> GetGuest(int Id)
+        //{
+        //    var guest = await _context.Guest.Where(e => e.Id = Id).FirstOrDefaultAsync();
+        //    if (guest == null)
+        //        return BadRequest("not found");
+        //    return Ok(guest);
+        //}
 
         [HttpPost]
         [Route("addGuest")]
