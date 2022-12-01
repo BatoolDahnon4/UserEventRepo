@@ -44,6 +44,10 @@ namespace eventRegistration.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Okay")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
 
@@ -56,10 +60,6 @@ namespace eventRegistration.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Table")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("haveMind")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

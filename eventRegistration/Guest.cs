@@ -20,7 +20,7 @@ namespace eventRegistration
         public int PhoneNumber { get; set; }
         public string Source { get; set;} = string.Empty;
         public Boolean IsAttended { get; set; }
-        public string haveMind { get; set; } = string.Empty;
+        public string Okay { get; set; } = string.Empty;
         public string Table { get; set; }=string.Empty;
 
        

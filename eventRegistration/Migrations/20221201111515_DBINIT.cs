@@ -23,7 +23,7 @@ namespace eventRegistration.Migrations
                     PhoneNumber = table.Column<int>(type: "int", nullable: false),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsAttended = table.Column<bool>(type: "bit", nullable: false),
-                    haveMind = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Okay = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Table = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
