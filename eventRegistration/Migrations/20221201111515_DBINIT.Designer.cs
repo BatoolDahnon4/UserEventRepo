@@ -12,7 +12,7 @@ using eventRegistration;
 namespace eventRegistration.Migrations
 {
     [DbContext(typeof(GContext))]
-    [Migration("20221130123545_DBINIT")]
+    [Migration("20221201111515_DBINIT")]
     partial class DBINIT
     {
         /// <inheritdoc />
@@ -47,6 +47,10 @@ namespace eventRegistration.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Okay")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
 
@@ -59,10 +63,6 @@ namespace eventRegistration.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Table")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("haveMind")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

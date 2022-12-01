@@ -34,7 +34,7 @@ namespace eventRegistration.Controllers
                 CompanyName = v.CompanyName,
                 PhoneNumber = v.PhoneNumber,
                 Source = v.Source,
-                haveMind = v.haveMind,
+                Okay = v.Okay,
         }).ToListAsync();
             return Ok(guest);
         }
