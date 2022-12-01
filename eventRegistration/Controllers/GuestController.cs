@@ -67,6 +67,8 @@ namespace eventRegistration.Controllers
             var count = generator.Next(100000, 1000000);
 
 
+
+
             //var count = await _context.Guest.CountAsync();
 
 
