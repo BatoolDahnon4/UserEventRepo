@@ -21,8 +21,8 @@ namespace MedcorSL.Services
     {
         Task SendEmailAsync(EmailViewModel emailViewModel);
        
-        Task SendRegistrationEmailAsync(Guest guest, int count);
-        Task SendRegistrationEmailAsync(Guest guest);
+        Task SendRegistrationEmailAsync(Guest guest, int count, Guid Id);
+       Task SendRegistrationEmailAsync(Guid Id, Guest guest);
     }
 
     public class EmailService : IEmailService
@@ -87,9 +87,9 @@ namespace MedcorSL.Services
 
         }
 
-        public Task SendRegistrationEmailAsync(Guest guest, int count)
+        public Task SendRegistrationEmailAsync(Guest guest, int count, Guid Id)
         {
-            var qrData = CreateQRCode(guest);
+            var qrData = CreateQRCode(Id);
 
 
             return SendEmailAsync(new EmailViewModel
@@ -105,10 +105,10 @@ namespace MedcorSL.Services
             //{ ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = body });
         }
 
-        public Task SendRegistrationEmailAsync(Guest guest)
+        public Task SendRegistrationEmailAsync(Guid Id,Guest guest)
         {
 
-            var qrData = CreateQRCode(guest);
+            var qrData = CreateQRCode(Id);
             
            
             return SendEmailAsync(new EmailViewModel
@@ -116,11 +116,11 @@ namespace MedcorSL.Services
         }
 
 
-        private byte[] CreateQRCode(Guest guest)
+        private byte[] CreateQRCode(Guid Id)
         {
             QRCodeGenerator QrGenerator = new QRCodeGenerator();
 
-            var data = JsonConvert.SerializeObject(guest);
+            var data = JsonConvert.SerializeObject(Id);
             QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(data, QRCodeGenerator.ECCLevel.M);
             QRCode QrCode = new QRCode(QrCodeInfo);
             Bitmap QrBitmap = QrCode.GetGraphic(10);
