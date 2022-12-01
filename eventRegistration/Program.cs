@@ -1,5 +1,6 @@
 using eventRegistration;
 using MedcorSL.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
+
 
 builder.Services.AddSingleton<IGuest, guestRepo>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -54,14 +57,30 @@ if (app.Environment.IsDevelopment())
 {
     
 }
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapControllerRoute(
+//        name:"default",
+//        pattern: "{controller=Home}/{action=CreateQrCode}/{id?}"
+//       );
+//});
 app.UseCors("allowAll");
 app.UseHttpsRedirection();
 
+app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+      pattern: "{controller=Home}/{action=CreateQrCode}/{id?}"
+    );
 
 app.Run();

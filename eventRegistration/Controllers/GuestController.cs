@@ -34,19 +34,20 @@ namespace eventRegistration.Controllers
                 CompanyName = v.CompanyName,
                 PhoneNumber = v.PhoneNumber,
                 Source = v.Source,
-            }).ToListAsync();
+                Okay = v.Okay,
+        }).ToListAsync();
             return Ok(guest);
         }
 
-        [HttpGet]
-        [Route("getGuestById")]
-        public async Task<ActionResult<Guest>> GetGuest(int Id)
-        {
-            var guest = await _context.Guest.Where(e => e.Id == Id).FirstOrDefaultAsync();
-            if (guest == null)
-                return BadRequest("not found");
-            return Ok(guest);
-        }
+        //[HttpGet]
+        //[Route("getGuestById")]
+        //public async Task<ActionResult<Guest>> GetGuest(int Id)
+        //{
+        //    var guest = await _context.Guest.Where(e => e.Id = Id).FirstOrDefaultAsync();
+        //    if (guest == null)
+        //        return BadRequest("not found");
+        //    return Ok(guest);
+        //}
 
         [HttpPost]
         [Route("addGuest")]
@@ -57,13 +58,13 @@ namespace eventRegistration.Controllers
             {
                 return BadRequest("Use another email please!");
             }
+            Random generator = new Random();
+            var count = generator.Next(100000, 1000000);
+          
 
-            var count = await _context.Guest.CountAsync();
+            //var count = await _context.Guest.CountAsync();
 
-            if (count >= 400)
-            {
-                return BadRequest("Full");
-            }
+        
 
             await _context.Guest.AddAsync(guest);
             _context.SaveChanges();
