@@ -35,19 +35,24 @@ namespace eventRegistration.Controllers
                 PhoneNumber = v.PhoneNumber,
                 Source = v.Source,
                 Okay = v.Okay,
-        }).ToListAsync();
+            }).ToListAsync();
             return Ok(guest);
         }
 
-        //[HttpGet]
-        //[Route("getGuestById")]
-        //public async Task<ActionResult<Guest>> GetGuest(int Id)
-        //{
-        //    var guest = await _context.Guest.Where(e => e.Id = Id).FirstOrDefaultAsync();
-        //    if (guest == null)
-        //        return BadRequest("not found");
-        //    return Ok(guest);
-        //}
+        [HttpGet]
+        [Route("getGuestByGuid/{id}")]
+        public async Task<ActionResult<Guest>> GetGuest(Guid id)
+        {
+            var guest = await _context.Guest.FindAsync(id);
+
+            if (guest == null)
+                return BadRequest("not found");
+
+            guest.IsAttended = true;
+            await _context.SaveChangesAsync();
+
+            return Ok(guest);
+        }
 
         [HttpPost]
         [Route("addGuest")]
@@ -60,21 +65,21 @@ namespace eventRegistration.Controllers
             }
             Random generator = new Random();
             var count = generator.Next(100000, 1000000);
-          
+
 
             //var count = await _context.Guest.CountAsync();
 
-        
+
 
             await _context.Guest.AddAsync(guest);
             _context.SaveChanges();
             if (guest.Source == "gaza" || guest.Source == "westbanke")
             {
-                await emailService.SendRegistrationEmailAsync(guest, count + 1);
+                await emailService.SendRegistrationEmailAsync(guest, count + 1, guest.Id);
             }
             else if (guest.Source == "conferencegaza" || guest.Source == "conferencewestbank")
             {
-                await emailService.SendRegistrationEmailAsync(guest);
+                await emailService.SendRegistrationEmailAsync(guest.Id, guest);
             }
             return Ok("");
 
