@@ -1,6 +1,7 @@
 ﻿using Azure;
 using eventRegistration;
 using eventRegistration.Controllers;
+using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using QRCoder;
 using System.Data;
 using System.Drawing;
 using System.Net;
+using System.Net.Mime;
 using System.Xml.Linq;
 
 namespace MedcorSL.Services
@@ -55,6 +57,8 @@ namespace MedcorSL.Services
             image.ContentId = MimeUtils.GenerateMessageId();
 
             builder.HtmlBody = string.Format(emailViewModel.Body, image.ContentId);
+
+            builder.Attachments.Add("qr.png", emailViewModel.Image, MimeKit.ContentType.Parse(MediaTypeNames.Image.Jpeg));
 
             mimeMessage.Body = builder.ToMessageBody();
 
