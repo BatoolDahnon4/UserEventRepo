@@ -75,11 +75,11 @@ namespace eventRegistration.Controllers
 
             await _context.Guest.AddAsync(guest);
             _context.SaveChanges();
-            if (guest.Source == "gaza" || guest.Source == "westbanke")
+            if (guest.Source == "gaza" || guest.Source == "wb")
             {
                 await emailService.SendRegistrationEmailAsync(guest, count + 1, guest.Id);
             }
-            else if (guest.Source == "conferencegaza" || guest.Source == "conferencewestbank")
+            else if (guest.Source == "conferencegaza" || guest.Source == "conferencewb")
             {
                 await emailService.SendRegistrationEmailAsync(guest.Id, guest);
             }
