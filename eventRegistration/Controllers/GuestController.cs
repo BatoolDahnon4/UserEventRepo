@@ -12,7 +12,7 @@ namespace eventRegistration.Controllers
         private IGuest _IGuest;
         private readonly GContext _context;
         private readonly IEmailService emailService;
-
+        public List<Guest> guests= new List<Guest>();
         public string lblCount;
 
         public GuestController(GContext dbContext, IEmailService emailService)
@@ -48,8 +48,8 @@ namespace eventRegistration.Controllers
             if (guest == null)
                 return BadRequest("not found");
 
-            guest.IsAttended = true;
-            await _context.SaveChangesAsync();
+            //guest.IsAttended = true;
+            //await _context.SaveChangesAsync();
 
             return Ok(guest);
         }
@@ -86,6 +86,22 @@ namespace eventRegistration.Controllers
             return Ok("");
 
         }
+
+        [HttpPut]
+        [Route("updateGuest")]
+        public async Task<ActionResult<Guest>> updateGuest(Guest gst)
+        {
+            var guest = _context.Guest.Find(gst.Id);
+            if (guest == null)
+                return BadRequest("Not found");
+
+         
+            guest.IsAttended = gst.IsAttended;
+            guest.Table = gst.Table;
+            await _context.SaveChangesAsync();
+            return Ok(guest);
+        }
+
 
 
     }
