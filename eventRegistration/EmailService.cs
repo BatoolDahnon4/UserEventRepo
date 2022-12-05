@@ -97,9 +97,9 @@ namespace MedcorSL.Services
 
 
             return SendEmailAsync(new EmailViewModel
-            { ToAddress = guest.Email, Subject = "REGISTRATION CONFIRM", Body = @"<p>""هذه دعوة خاصة وشخصية لحضور عشاء التشبيك وبناء العلاقات ويجب إبرازها وقت الحضور""</p> 
-                <br> <p>“This is a special and personal invitation for attending the Gala Dinner “Networking Reception”. Make sure to show your invitation when attending the Gala”</p>
-              <br> Confirmation Number : " + count });
+            { ToAddress = guest.Email, Subject = "Confirmation for Expotech", Body = @" 
+                <p>“Thank you for registering to ExpoTech gala dinner.”</p>
+              <br> Confirmation Number : " + Id });
             //, Image = qrData
             //var qrData = CreateQRCode(guest);
             ////var body = @$"<html><body><p>هذه دعوة خاصة وشخصية لحضور عشاء التشبيك وبناء العلاقات الذي سيعقد في الثاني عشر من ديسمبر في فندق الميلينيوم الساعة 6 مساءً ويجب إبرازها وقت الحضور</p>"+"<p>رقم الدعوة"+":"+count+
