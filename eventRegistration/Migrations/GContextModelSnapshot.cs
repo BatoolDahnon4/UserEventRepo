@@ -66,9 +66,6 @@ namespace eventRegistration.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.ToTable("Guest");
                 });
 #pragma warning restore 612, 618

@@ -12,7 +12,7 @@ using eventRegistration;
 namespace eventRegistration.Migrations
 {
     [DbContext(typeof(GContext))]
-    [Migration("20221206092138_DBINIT")]
+    [Migration("20221206143702_DBINIT")]
     partial class DBINIT
     {
         /// <inheritdoc />
@@ -68,9 +68,6 @@ namespace eventRegistration.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.ToTable("Guest");
                 });
