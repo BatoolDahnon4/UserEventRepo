@@ -17,7 +17,7 @@ namespace eventRegistration
         [Column(TypeName = "varchar(254)")]
         public string Email { get; set; }
         public string CompanyName { get; set; } = String.Empty;
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         public string Source { get; set;} = string.Empty;
         public Boolean IsAttended { get; set; }
         public string Okay { get; set; } = string.Empty;
