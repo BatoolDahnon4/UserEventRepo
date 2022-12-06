@@ -16,10 +16,12 @@ namespace eventRegistration
         [EmailAddress]
         [Column(TypeName = "varchar(254)")]
         public string Email { get; set; }
+
         public string CompanyName { get; set; } = String.Empty;
         public string PhoneNumber { get; set; }
         public string Source { get; set;} = string.Empty;
         public Boolean IsAttended { get; set; }
+
         public string Okay { get; set; } = string.Empty;
         public string Table { get; set; }=string.Empty;
 

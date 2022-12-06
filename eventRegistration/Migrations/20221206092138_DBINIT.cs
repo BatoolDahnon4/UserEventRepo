@@ -20,7 +20,7 @@ namespace eventRegistration.Migrations
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "varchar(254)", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsAttended = table.Column<bool>(type: "bit", nullable: false),
                     Okay = table.Column<string>(type: "nvarchar(max)", nullable: false),

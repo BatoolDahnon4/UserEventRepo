@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace eventRegistration.Controllers
 {
@@ -104,8 +105,14 @@ namespace eventRegistration.Controllers
             await _context.SaveChangesAsync();
             return Ok(guest);
         }
-
-
+        
+        [ClaimRequirementFilter]
+        [HttpGet]
+        public IActionResult GetResource()
+        {
+            return Ok();
+        }
+        
 
     }
 }
