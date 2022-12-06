@@ -20,6 +20,7 @@ namespace eventRegistration
                 context.HttpContext.Response.StatusCode = 401;
                 //return;
                 context.Result = new UnauthorizedResult();
+
             }
 
         }
