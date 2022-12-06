@@ -23,8 +23,11 @@ namespace eventRegistration.Controllers
 
         [HttpGet]
         [Route("getGuestes")]
+        
         public async Task<ActionResult<List<Guest>>> GetGuestes()
         {
+            
+
             var guest = await _context.Guest.Select(v => new Guest()
             {
                 Id = v.Id,
