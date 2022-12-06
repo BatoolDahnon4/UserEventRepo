@@ -106,6 +106,7 @@ namespace eventRegistration.Controllers
             return Ok(guest);
         }
         
+
         [ClaimRequirementFilter]
         [HttpGet]
         public IActionResult GetResource()
