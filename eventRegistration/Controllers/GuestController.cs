@@ -62,11 +62,11 @@ namespace eventRegistration.Controllers
         [Route("addGuest")]
         public async Task<ActionResult<Guest>> AddGuest(Guest guest)
         {
-            var oldEmail = await _context.Guest.AnyAsync(c => c.Email == guest.Email);
-            if (oldEmail)
-            {
-                return BadRequest("Use another email please!");
-            }
+            //var oldEmail = await _context.Guest.AnyAsync(c => c.Email == guest.Email);
+            //if (oldEmail)
+            //{
+            //    return BadRequest("Use another email please!");
+            //}
             Random generator = new Random();
             var count = generator.Next(100000, 1000000);
 
