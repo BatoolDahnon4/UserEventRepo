@@ -97,11 +97,20 @@ namespace eventRegistration.Controllers
         {
             var guest = _context.Guest.Find(gst.Id);
             if (guest == null)
-                return BadRequest("Not found");
+            {
+                return NotFound("Not found");
+            }
 
-         
             guest.IsAttended = gst.IsAttended;
             guest.Table = gst.Table;
+            guest.CompanyName = gst.CompanyName;
+            guest.PhoneNumber = gst.PhoneNumber;
+            guest.Email = gst.Email;
+            guest.Source = gst.Source;
+            guest.Position= gst.Position;
+            guest.Name = gst.Name;
+            guest.Okay = gst.Okay;
+
             await _context.SaveChangesAsync();
             return Ok(guest);
         }
