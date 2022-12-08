@@ -22,9 +22,9 @@ namespace MedcorSL.Services
     public interface IEmailService
     {
         Task SendEmailAsync(EmailViewModel emailViewModel);
-       
         Task SendRegistrationEmailAsync(Guest guest, int count, Guid Id);
-       Task SendRegistrationEmailAsync(Guid Id, Guest guest);
+        Task SendRegistrationEmailAsync(Guid Id, Guest guest);
+        Task SendConfirmationEmail (Guest guest);
     }
 
     public class EmailService : IEmailService
@@ -41,7 +41,7 @@ namespace MedcorSL.Services
             var mimeMessage = new MimeMessage();
 
 
-            mimeMessage.From.Add(new MailboxAddress("EXPOTECH", _emailConfig.Username));
+            mimeMessage.From.Add(new MailboxAddress("EXPOTECH Qr Code", _emailConfig.Username));
 
             mimeMessage.To.Add(new MailboxAddress
             (emailViewModel.ToAdressTitle,
@@ -51,24 +51,25 @@ namespace MedcorSL.Services
 
 
             var builder = new BodyBuilder();
+            if(emailViewModel.Image != null)
+            {
+                var image = builder.LinkedResources.Add("qr.png", emailViewModel.Image);
+
+                image.ContentId = MimeUtils.GenerateMessageId(); builder.HtmlBody = string.Format(emailViewModel.Body, image.ContentId);
+
+                builder.Attachments.Add("qr.png", emailViewModel.Image, MimeKit.ContentType.Parse(MediaTypeNames.Image.Jpeg));
+
+                mimeMessage.Body = new TextPart("html")
+                {
+                   Text = (string)emailViewModel.Body
+                };
+            }
+            else
+            {
+                mimeMessage.Body = builder.ToMessageBody();
             
-            //var image = builder.LinkedResources.Add("qr.png"/*, emailViewModel.Image*/);
+            }
 
-            //image.ContentId = MimeUtils.GenerateMessageId();
-
-            builder.HtmlBody = string.Format(emailViewModel.Body/*, image.ContentId*/);
-
-            //builder.Attachments.Add("qr.png"/*, emailViewModel.Image*/, MimeKit.ContentType.Parse(MediaTypeNames.Image.Jpeg));
-
-            mimeMessage.Body = builder.ToMessageBody();
-
-
-            //mimeMessage.Body = new TextPart("html")
-            //{
-            //    Text = (string)emailViewModel.Body
-            //};
-
-            
             using (var emailClient = new SmtpClient())
             {
                 try
@@ -135,6 +136,15 @@ namespace MedcorSL.Services
             string QrUri = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(BitmapArray));
            
             return BitmapArray;
+        }
+
+        public Task SendConfirmationEmail(Guest guest)
+        {
+            var qrData = CreateQRCode(guest.Id);
+            return SendEmailAsync(new EmailViewModel
+            { ToAddress = guest.Email, Subject = "", Body = @" 
+                <p>“”</p>
+              <br> Confirmation Number : " + guest.Id, Image = qrData });
         }
     }
 

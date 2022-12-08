@@ -1,5 +1,6 @@
 ﻿using MedcorSL.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -22,24 +23,35 @@ namespace eventRegistration.Controllers
             this.emailService = emailService;
         }
 
-        [HttpGet]
-        [Route("getGuestes")]
-        
-        public async Task<ActionResult<List<Guest>>> GetGuestes()
-        {
-            
 
-            var guest = await _context.Guest.Select(v => new Guest()
+        [HttpGet]
+        [Route("getConfernceGuestes")]
+        
+        public async Task<ActionResult<List<Guest>>> getConfernceGuestes()
+        {
+
+
+            var guest = await _context.Guest.Where(e => e.Source == "conferencegaza"|| e.Source == "conferencewb").ToListAsync();
+
+            if (guest == null)
             {
-                Id = v.Id,
-                Name = v.Name,
-                Position = v.Position,
-                Email = v.Email,
-                CompanyName = v.CompanyName,
-                PhoneNumber = v.PhoneNumber,
-                Source = v.Source,
-                Okay = v.Okay,
-            }).ToListAsync();
+                return BadRequest("not found");
+            }
+            return Ok(guest);
+        }
+        [HttpGet]
+        [Route("getGalaGuestes")]
+
+        public async Task<ActionResult<List<Guest>>> getGalaGuestes()
+        {
+
+
+            var guest = await _context.Guest.Where(e => e.Source == "gaza" || e.Source == "wb").ToListAsync();
+
+            if (guest == null)
+            {
+                return BadRequest("not found");
+            }
             return Ok(guest);
         }
 

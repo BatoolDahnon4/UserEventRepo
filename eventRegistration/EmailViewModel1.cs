@@ -9,6 +9,6 @@ namespace MedcorSL.Services
         public string ToAddress { get; set; }
         public object Subject { get; set; }
         public string Body { get; set; }
-        //public byte[] Image { get; set; }
+        public byte[]? Image { get; set; }
     }
 }
