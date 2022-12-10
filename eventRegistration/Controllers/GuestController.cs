@@ -46,11 +46,11 @@ namespace eventRegistration.Controllers
         {
 
 
-            var guest = await _context.Guest.Where(e => e.Source == "gaza" || e.Source == "wb").ToListAsync();
+            var guest = await _context.Guest.Where(e => /*e.Source == "gaza" ||*/ e.Source == "wb").OrderBy(e => e.CompanyName).ToListAsync();
 
             if (guest == null)
             {
-                return BadRequest("not found");
+                return NoContent();
             }
             return Ok(guest);
         }
