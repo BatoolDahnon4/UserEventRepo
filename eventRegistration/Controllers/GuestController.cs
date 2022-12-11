@@ -86,12 +86,14 @@ namespace eventRegistration.Controllers
         public async Task<ActionResult<Guest>> GetGuest(Guid id)
         {
             var guest = await _context.Guest.FindAsync(id);
-
+            
             if (guest == null)
-                return BadRequest("not found");
-
-            //guest.IsAttended = true;
-            //await _context.SaveChangesAsync();
+            {
+                return NotFound();
+            }
+                
+            guest.IsAttended = true;
+            await _context.SaveChangesAsync();
 
             return Ok(guest);
         }
