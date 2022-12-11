@@ -67,13 +67,18 @@ builder.Services.AddHangfire(configuration => configuration
     {
         CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
         SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-        QueuePollInterval = TimeSpan.Zero,
+        QueuePollInterval = TimeSpan.FromSeconds(15),
         UseRecommendedIsolationLevel = true,
         DisableGlobalLocks = true
     }));
 
 // Add the processing server as IHostedService
-builder.Services.AddHangfireServer(options => options.WorkerCount = 1);
+builder.Services.AddHangfireServer(options =>
+{
+    options.WorkerCount = 1;
+    options.SchedulePollingInterval = TimeSpan.FromSeconds(15);
+    options.ServerCheckInterval= TimeSpan.FromSeconds(120);
+});
 
 var app = builder.Build();
 

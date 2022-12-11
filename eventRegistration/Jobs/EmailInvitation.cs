@@ -95,7 +95,7 @@ namespace eventRegistration.Jobs
                     emailClient.Connect(
                         emailConfig.SmtpServer,
                         emailConfig.SmtpPort,
-                        SecureSocketOptions.StartTls);
+                        SecureSocketOptions.StartTlsWhenAvailable);
 
                     emailClient.Authenticate(emailConfig.Username, emailConfig.Password);
                     emailClient.Send(message);
@@ -104,7 +104,13 @@ namespace eventRegistration.Jobs
                 {
                     throw;
                 }
-
+                finally {
+                    if(emailClient.IsConnected)
+                    {
+                        emailClient.Disconnect(true);
+                    }
+                    emailClient.Dispose(); 
+                }
             }
         }
         public static string getQRText(Guest guest)
