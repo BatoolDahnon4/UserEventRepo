@@ -11,6 +11,9 @@ using System.Text.Json.Serialization;
 using Hangfire;
 using Hangfire.SqlServer;
 using System.Configuration;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Hangfire.Dashboard;
+using Hangfire.Dashboard.BasicAuthorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +96,25 @@ app.UseSwaggerUI();
 //});
 app.UseCors("allowAll");
 app.UseHttpsRedirection();
+
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new BasicAuthAuthorizationFilter(new BasicAuthAuthorizationFilterOptions
+        {
+            RequireSsl = false,
+            SslRedirect = false,
+            LoginCaseSensitive = true,
+            Users = new []
+            {
+                new BasicAuthAuthorizationUser
+                {
+                    Login = "hani",
+                    PasswordClear =  "200hia11"
+                }
+            }
+
+        }) }
+});
 
 app.UseRouting();
 app.UseAuthorization();
