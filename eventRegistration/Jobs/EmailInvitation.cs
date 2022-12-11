@@ -30,6 +30,8 @@ namespace eventRegistration.Jobs
             string QrUri;
             string p1;
             string p2;
+            string tableP1 = "";
+            string tableP2 = "";
             string table;
             switch (guest.Source.ToLower())
             {
@@ -48,9 +50,10 @@ namespace eventRegistration.Jobs
             }
 
             table = guest.Table.ToString();
-            if (table.IsNullOrEmpty())
+            if (!table.IsNullOrEmpty())
             {
-                table = "N/A";
+                tableP1 = "طاولة رقم ("+ table + ")";
+                tableP2 = "Table# ("+ table + ")";
             }
 
             QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(getQRText(guest), QRCodeGenerator.ECCLevel.H);
@@ -70,7 +73,8 @@ namespace eventRegistration.Jobs
                 .Replace("{{QRString}}", QrUri)
                 .Replace("{{p1}}", p1)
                 .Replace("{{p2}}", p2)
-                .Replace("{{table}}", table);
+                .Replace("{{tableP1}}", tableP1)
+                .Replace("{{tableP2}}", tableP2);
             message.Body = bodyBuilder.ToMessageBody();
 
             using (var emailClient = new MailKit.Net.Smtp.SmtpClient())
@@ -178,7 +182,7 @@ You will find attached the QR code in order to know your seating; so please show
                                                                             <tbody>
                                                                                 <tr>
                                                                                     <td align=""center"" class=""esd-block-text"">
-                                                                                        <p style=""color: #000000; direction: rtl; line-height: 120%;"">هذا الإيميل لتأكيد تسجيل حضوركم لحفل عشاء التشبيك ضمن فعاليات أسبوع فلسطين التكنولوجي - إكسبوتك 2022<br><br>يوم الاثنين 12/12/2022 الساعة 6 مساءً، {{p1}}.<br><br>تجدون مرفقاً رمز ال QR من أجل معرفة مكان الجلوس، لذا يرجى إشهار الرمز لدى وصولكم القاعة.<br><br>طاولة رقم ({{table}})</p>
+                                                                                        <p style=""color: #000000; direction: rtl; line-height: 120%;"">هذا الإيميل لتأكيد تسجيل حضوركم لحفل عشاء التشبيك ضمن فعاليات أسبوع فلسطين التكنولوجي - إكسبوتك 2022<br><br>يوم الاثنين 12/12/2022 الساعة 6 مساءً، {{p1}}.<br><br>تجدون مرفقاً رمز ال QR من أجل معرفة مكان الجلوس، لذا يرجى إشهار الرمز لدى وصولكم القاعة.<br><br>{{tableP1}}</p>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
@@ -204,7 +208,7 @@ You will find attached the QR code in order to know your seating; so please show
                                                                             <tbody>
                                                                                 <tr>
                                                                                     <td align=""center"" class=""esd-block-text"">
-                                                                                        <p style=""color: #000000; direction: ltr; line-height: 120%;"">This email is to confirm your attendance for the Gala Dinner “Networking Reception” within Palestine Technology Week – Expotech 2022.<br><br>On Monday, 12th/12/2022, at 6:00 pm, {{p2}}.<br><br>You will find attached the QR code in order to know your seating; so please show your code upon arriving the venue.<br><br>Table# ({{table}})</p>
+                                                                                        <p style=""color: #000000; direction: ltr; line-height: 120%;"">This email is to confirm your attendance for the Gala Dinner “Networking Reception” within Palestine Technology Week – Expotech 2022.<br><br>On Monday, 12th/12/2022, at 6:00 pm, {{p2}}.<br><br>You will find attached the QR code in order to know your seating; so please show your code upon arriving the venue.<br><br>{{tableP2}}</p>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
