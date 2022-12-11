@@ -50,11 +50,20 @@ namespace eventRegistration.Jobs
             }
 
             table = guest.Table.ToString();
-            if (!table.IsNullOrEmpty())
+            if(guest.Source == "wb")
             {
-                tableP1 = "طاولة رقم ("+ table + ")";
-                tableP2 = "Table# ("+ table + ")";
+                if (!table.IsNullOrEmpty())
+                {
+                    tableP1 = "طاولة رقم (" + table + ")";
+                    tableP2 = "Table# (" + table + ")";
+                }
+                else
+                {
+                    tableP1 = "طاولة رقم (N/A)";
+                    tableP2 = "Table# (N/A)";
+                }
             }
+            
 
             QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(getQRText(guest), QRCodeGenerator.ECCLevel.H);
             QRCode QrCode = new QRCode(QrCodeInfo);
