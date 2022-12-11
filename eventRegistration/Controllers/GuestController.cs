@@ -31,10 +31,10 @@ namespace eventRegistration.Controllers
         [HttpPost]
         [Route("sendInvitationQRtoGuests")]
 
-        public async Task<ActionResult> sendInvitationQRtoGuests(List<Guest> guests)
+        public async Task<ActionResult> sendInvitationQRtoGuests(List<Guid> guestGUIDs)
         {
-            var guestIds = guests.Select(g => g.Id).ToList();
-            var validGuests = _context.Guest.Where(guest => guestIds.Contains(guest.Id)).Where(guest => guest.Source.Equals("wb")).ToList();
+            var validSources = new List<string>() { "wb", "gaza" };
+            var validGuests = _context.Guest.Where(guest => guestGUIDs.Contains(guest.Id)).Where(guest => validSources.Contains(guest.Source)).ToList();
 
             validGuests.ForEach(g =>
             {

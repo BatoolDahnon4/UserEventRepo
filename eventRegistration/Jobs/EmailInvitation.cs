@@ -25,11 +25,26 @@ namespace eventRegistration.Jobs
             message.ReplyTo.Add(new MailboxAddress("noreply", "noreply@pita.ps"));
 
             message.Subject = "Gala Invitation - Expotech 2022";
-
             
-
-
             string QrUri;
+            string p1;
+            string p2;
+            switch (guest.Source.ToLower())
+            {
+                case "wb":
+                    p1 = "فندق ميلينيوم رام الله";
+                    p2 = "in Millennium Hotel";
+                    break;
+                case "gaza":
+                    p1 = "فندق الروتس - غزة";
+                    p2 = "in Roots Hotel - Gaza";
+                    break;
+                default:
+                    p1 = "";
+                    p2 = "";
+                    throw new ArgumentException("Source value is not valid");
+            }
+
             QRCodeData QrCodeInfo = QrGenerator.CreateQrCode(getQRText(guest), QRCodeGenerator.ECCLevel.H);
             QRCode QrCode = new QRCode(QrCodeInfo);
             Bitmap QrBitmap = QrCode.GetGraphic(10);
@@ -43,7 +58,7 @@ namespace eventRegistration.Jobs
             }
 
             bodyBuilder.TextBody = getEmailTextTemplate();
-            bodyBuilder.HtmlBody = getEmailHTMLTemplate().Replace("{{QRString}}", QrUri);
+            bodyBuilder.HtmlBody = getEmailHTMLTemplate().Replace("{{QRString}}", QrUri).Replace("{{p1}}", p1).Replace("{{p2}}", p2);
             message.Body = bodyBuilder.ToMessageBody();
 
             using (var emailClient = new MailKit.Net.Smtp.SmtpClient())
@@ -151,7 +166,7 @@ You will find attached the QR code in order to know your seating; so please show
                                                                             <tbody>
                                                                                 <tr>
                                                                                     <td align=""center"" class=""esd-block-text"">
-                                                                                        <p style=""color: #000000; direction: rtl; line-height: 120%;"">هذا الإيميل لتأكيد تسجيل حضوركم لحفل عشاء التشبيك ضمن فعاليات أسبوع فلسطين التكنولوجي - إكسبوتك 2022<br><br>يوم الاثنين 12/12/2022 الساعة 6 مساءً، فندق ميلينيوم رام الله.<br><br>تجدون مرفقاً رمز ال QR من أجل معرفة مكان الجلوس، لذا يرجى إشهار الرمز لدى وصولكم القاعة.</p>
+                                                                                        <p style=""color: #000000; direction: rtl; line-height: 120%;"">هذا الإيميل لتأكيد تسجيل حضوركم لحفل عشاء التشبيك ضمن فعاليات أسبوع فلسطين التكنولوجي - إكسبوتك 2022<br><br>يوم الاثنين 12/12/2022 الساعة 6 مساءً، {{p1}}.<br><br>تجدون مرفقاً رمز ال QR من أجل معرفة مكان الجلوس، لذا يرجى إشهار الرمز لدى وصولكم القاعة.</p>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
@@ -177,7 +192,7 @@ You will find attached the QR code in order to know your seating; so please show
                                                                             <tbody>
                                                                                 <tr>
                                                                                     <td align=""center"" class=""esd-block-text"">
-                                                                                        <p style=""color: #000000; direction: ltr; line-height: 120%;"">This email is to confirm your attendance for the Gala Dinner “Networking Reception” within Palestine Technology Week – Expotech 2022.<br><br>On Monday, 12th/12/2022, at 6:00 pm, in Millennium Hotel.<br><br>You will find attached the QR code in order to know your seating; so please show your code upon arriving the venue.</p>
+                                                                                        <p style=""color: #000000; direction: ltr; line-height: 120%;"">This email is to confirm your attendance for the Gala Dinner “Networking Reception” within Palestine Technology Week – Expotech 2022.<br><br>On Monday, 12th/12/2022, at 6:00 pm, {{p2}}.<br><br>You will find attached the QR code in order to know your seating; so please show your code upon arriving the venue.</p>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tbody>
