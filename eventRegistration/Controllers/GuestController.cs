@@ -1,5 +1,8 @@
-﻿using MedcorSL.Services;
+﻿using eventRegistration.Jobs;
+using Hangfire;
+using MedcorSL.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -13,40 +16,63 @@ namespace eventRegistration.Controllers
     {
         private IGuest _IGuest;
         private readonly GContext _context;
+        private readonly EmailConfig _emailConfig;
         private readonly IEmailService emailService;
         public List<Guest> guests= new List<Guest>();
         public string lblCount;
 
-        public GuestController(GContext dbContext, IEmailService emailService)
+        public GuestController(GContext dbContext, IEmailService emailService, EmailConfig emailConfig)
         {
             _context = dbContext;
             this.emailService = emailService;
+            _emailConfig = emailConfig;
         }
 
+        [HttpPost]
+        [Route("sendInvitationQRtoGuests")]
+
+        public async Task<ActionResult> sendInvitationQRtoGuests(List<Guest> guests)
+        {
+            var guestIds = guests.Select(g => g.Id).ToList();
+            var validGuests = _context.Guest.Where(guest => guestIds.Contains(guest.Id)).Where(guest => guest.Source.Equals("wb")).ToList();
+
+            validGuests.ForEach(g =>
+            {
+                BackgroundJob.Enqueue(() => EmailJob.SendInvitationQR(g, _emailConfig));
+            });
+            return Accepted();
+        }
 
         [HttpGet]
         [Route("getConfernceGuestes")]
         
-        public async Task<ActionResult<List<Guest>>> getConfernceGuestes()
+        public async Task<ActionResult<List<Guest>>> getConfernceGuestes([FromQuery] string source)
         {
+            var validSources = new List<string>() { "conferencegaza", "conferencewb" };
+            if (!validSources.Contains(source.ToLower()))
+            {
+                return BadRequest("Invalid Source");
+            }
 
-
-            var guest = await _context.Guest.Where(e => e.Source == "conferencegaza"|| e.Source == "conferencewb").ToListAsync();
+            var guest = await _context.Guest.Where(e => e.Source == source.ToLower()).OrderBy(e => e.CompanyName).ToListAsync();
 
             if (guest == null)
             {
-                return BadRequest("not found");
+                return NoContent();
             }
             return Ok(guest);
         }
         [HttpGet]
         [Route("getGalaGuestes")]
 
-        public async Task<ActionResult<List<Guest>>> getGalaGuestes()
+        public async Task<ActionResult<List<Guest>>> getGalaGuestes([FromQuery]string source)
         {
-
-
-            var guest = await _context.Guest.Where(e => /*e.Source == "gaza" ||*/ e.Source == "wb").OrderBy(e => e.CompanyName).ToListAsync();
+            var validSources = new List<string>() { "wb","gaza"};
+            if (!validSources.Contains(source.ToLower()))
+            {
+                return BadRequest("Invalid Source");
+            }
+            var guest = await _context.Guest.Where(e => e.Source == source.ToLower()).OrderBy(e => e.CompanyName).ToListAsync();
 
             if (guest == null)
             {

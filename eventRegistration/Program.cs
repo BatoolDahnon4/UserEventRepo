@@ -8,6 +8,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Hangfire;
+using Hangfire.SqlServer;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +53,25 @@ builder.Services.AddCors(c =>
     });
 });
 
+
+
+// Add Hangfire services.
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"), new SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        QueuePollInterval = TimeSpan.Zero,
+        UseRecommendedIsolationLevel = true,
+        DisableGlobalLocks = true
+    }));
+
+// Add the processing server as IHostedService
+builder.Services.AddHangfireServer(options => options.WorkerCount = 1);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -80,5 +102,10 @@ app.MapControllerRoute(
     name: "default",
       pattern: "{controller=Home}/{action=CreateQrCode}/{id?}"
     );
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHangfireDashboard();
+});
 
 app.Run();
