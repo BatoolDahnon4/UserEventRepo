@@ -14,6 +14,10 @@ namespace eventRegistration.Jobs
 {
     public class EmailJob
     {
+        public static void SendInvitationQR(Guest guest, EmailConfig emailConfig) 
+        {
+            SendInvitationQR(guest, emailConfig, -1);
+        }
         public static void SendInvitationQR(Guest guest, EmailConfig emailConfig, int emailAccountIndex)
         {
             QRCodeGenerator QrGenerator = new QRCodeGenerator();
