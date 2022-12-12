@@ -67,7 +67,7 @@ builder.Services.AddHangfire(configuration => configuration
     {
         CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
         SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-        QueuePollInterval = TimeSpan.FromSeconds(15),
+        QueuePollInterval = TimeSpan.Zero,
         UseRecommendedIsolationLevel = true,
         DisableGlobalLocks = true
     }));
@@ -76,8 +76,8 @@ builder.Services.AddHangfire(configuration => configuration
 builder.Services.AddHangfireServer(options =>
 {
     options.WorkerCount = 1;
-    options.SchedulePollingInterval = TimeSpan.FromSeconds(15);
-    options.ServerCheckInterval= TimeSpan.FromSeconds(120);
+    options.SchedulePollingInterval = TimeSpan.FromSeconds(1);
+    //options.ServerCheckInterval= TimeSpan.FromSeconds(120);
 });
 
 var app = builder.Build();

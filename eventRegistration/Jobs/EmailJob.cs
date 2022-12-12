@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using eventRegistration;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using MedcorSL.Services;
 using MimeKit;
@@ -13,7 +14,7 @@ namespace eventRegistration.Jobs
 {
     public class EmailJob
     {
-        public static void SendInvitationQR(Guest guest, EmailConfig emailConfig)
+        public static void SendInvitationQR(Guest guest, EmailConfig emailConfig, int emailAccountIndex)
         {
             QRCodeGenerator QrGenerator = new QRCodeGenerator();
             MimeMessage message = new MimeMessage();
@@ -22,7 +23,7 @@ namespace eventRegistration.Jobs
 
             message.From.Add(new MailboxAddress("PITA", emailConfig.Username));
             message.To.Add(new MailboxAddress(guest.Name, guest.Email) );
-            message.Bcc.Add(new MailboxAddress("Hani Araj", "hani.araj@gmail.com"));
+            //message.Bcc.Add(new MailboxAddress("Hani Araj", "hani.araj@gmail.com"));
             message.ReplyTo.Add(new MailboxAddress("noreply", "noreply@pita.ps"));
 
             message.Subject = "Gala Invitation - Expotech 2022";
@@ -86,6 +87,9 @@ namespace eventRegistration.Jobs
                 .Replace("{{tableP2}}", tableP2);
             message.Body = bodyBuilder.ToMessageBody();
 
+            var emailAccount = getEmailAccount(emailConfig, emailAccountIndex);
+
+
             using (var emailClient = new MailKit.Net.Smtp.SmtpClient())
             {
                 try
@@ -97,7 +101,7 @@ namespace eventRegistration.Jobs
                         emailConfig.SmtpPort,
                         SecureSocketOptions.StartTlsWhenAvailable);
 
-                    emailClient.Authenticate(emailConfig.Username, emailConfig.Password);
+                    emailClient.Authenticate(emailAccount.Username, emailAccount.Password);
                     emailClient.Send(message);
                 }
                 catch (Exception e)
@@ -113,6 +117,42 @@ namespace eventRegistration.Jobs
                 }
             }
         }
+
+        public static int getEmailAccountIndex(List<EmailAccountConfig> emailAccounts, int currentIndex)
+        {
+            var emailAccountCounter = emailAccounts?.Count;
+            if (emailAccountCounter > 0)
+            {
+                currentIndex++;
+                if (currentIndex >= emailAccountCounter || emailAccountCounter < 0)
+                {
+                    currentIndex = 0;
+                }
+            }
+            else
+            {
+                currentIndex = -1;
+            }
+
+            return currentIndex;
+        }
+        
+        public static EmailAccountConfig getEmailAccount(EmailConfig emailConfig, int currentIndex)
+        {
+            if (emailConfig.Accounts?.Count > 0)
+            {
+                return emailConfig.Accounts[currentIndex];
+            }
+            else
+            {
+                return new EmailAccountConfig()
+                {
+                    Password = emailConfig.Password,
+                    Username = emailConfig.Username
+                };
+            }            
+        }
+
         public static string getQRText(Guest guest)
         {
             /*return string.Format(

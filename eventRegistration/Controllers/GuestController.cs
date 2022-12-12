@@ -35,10 +35,13 @@ namespace eventRegistration.Controllers
         {
             var validSources = new List<string>() { "wb", "gaza" };
             var validGuests = _context.Guest.Where(guest => guestGUIDs.Contains(guest.Id)).Where(guest => validSources.Contains(guest.Source)).ToList();
-
+            var counter = 2;
+            var emailAccountIndex = -1;
             validGuests.ForEach(g =>
             {
-                BackgroundJob.Enqueue(() => EmailJob.SendInvitationQR(g, _emailConfig));
+                emailAccountIndex = EmailJob.getEmailAccountIndex(_emailConfig.Accounts, emailAccountIndex);
+                BackgroundJob.Schedule(() => EmailJob.SendInvitationQR(g, _emailConfig, emailAccountIndex), TimeSpan.FromSeconds(counter));
+                counter = counter+2;
             });
             return Accepted();
         }
